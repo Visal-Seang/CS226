@@ -34,9 +34,12 @@ class TransactionResource extends Resource
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('transaction_type')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('transaction_type')
+                    ->options([
+                        'deposit' => 'Deposit',
+                        'withdrawal' => 'Withdrawal',
+                        'transfer' => 'Transfer',
+                    ]),
             ]);
     }
 
