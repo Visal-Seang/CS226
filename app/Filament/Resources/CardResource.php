@@ -23,12 +23,14 @@ class CardResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('account_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('client_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('account_id')
+                    ->options(
+                        \App\Models\Account::all()->pluck('account_id', 'account_id')
+                    )->required(),
+                Forms\Components\Select::make('client_id')
+                    ->options(
+                        \App\Models\Client::all()->pluck('username', 'client_id')
+                    )->required(),
                 Forms\Components\TextInput::make('card_number')
                     ->required()
                     ->maxLength(255),
