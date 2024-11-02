@@ -14,12 +14,9 @@ return new class extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id('loan_id');
             $table->foreignId('client_id')->constrained('clients', 'client_id')->cascadeOnDelete();
-            $table->foreignId('account_id')->constrained('accounts','account_id')->cascadeOnDelete();
-            $table->string('loan_number')->unique();
+            $table->foreignId('account_id')->constrained('accounts', 'account_id')->cascadeOnDelete();
             $table->decimal('amount', 10, 2);
             $table->decimal('interest_rate', 10, 2);
-            $table->date('start_date');
-            $table->date('end_date');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });

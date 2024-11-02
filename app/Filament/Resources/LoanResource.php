@@ -17,36 +17,31 @@ class LoanResource extends Resource
 {
     protected static ?string $model = Loan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('account_id')
-                    ->options(
-                        \App\Models\Account::all()->pluck('account_id', 'account_id')
-                    )->required(),
                 Forms\Components\Select::make('client_id')
                     ->options(
-                        \App\Models\Client::all()->pluck('username', 'client_id')
-                    )->required(),
-                Forms\Components\TextInput::make('loan_number')
-                    ->required()
-                    ->maxLength(255),
+                        \App\Models\Client::whereNotNull('username')->pluck('username', 'client_id')
+                    ),
+                Forms\Components\Select::make('account_id')
+                    ->options(
+                        \App\Models\Account::whereNotNull('client_id')->pluck('client_id', 'client_id')
+                    ),
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('interest_rate')
-                    ->required()
                     ->numeric(),
-                Forms\Components\DatePicker::make('start_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('end_date')
-                    ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255)
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'pending',
+                        'approved' => 'approved',
+                        'rejected' => 'rejected',
+                    ])
                     ->default('pending'),
             ]);
     }
@@ -61,19 +56,11 @@ class LoanResource extends Resource
                 Tables\Columns\TextColumn::make('account_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('loan_number')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('interest_rate')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('start_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('end_date')
-                    ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
